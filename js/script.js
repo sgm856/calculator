@@ -46,7 +46,10 @@ const divide = function (...args) {
 }
 
 const setPreviousContext = function (value) {
-    previousContext = value;
+    debugger;
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        previousContext = value;
+    }
 }
 
 const setOperator = function (value) {
@@ -82,7 +85,11 @@ const resetTerms = function () {
 }
 
 const getCurrentContext = function () {
-    return sanitizeNumberInput(getResultDisplay().value);
+    let currentNumber = sanitizeNumberInput(getResultDisplay().value);
+    if (currentNumber === '') {
+        return NaN;
+    }
+    return Number(sanitizeNumberInput(getResultDisplay().value));
 }
 
 const clearResultsDisplay = function () {
@@ -124,6 +131,7 @@ resetButton.addEventListener('click', () => {
 let operators = document.querySelectorAll('.operator');
 operators.forEach((button) => {
     button.addEventListener('click', (event) => {
+        debugger;
         setPreviousContext(getCurrentContext());
         clearResultsDisplay();
         setOperator(event.target.textContent);
