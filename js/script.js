@@ -82,16 +82,22 @@ const resetTerms = function () {
 }
 
 const getCurrentContext = function () {
-    return getResultDisplay().value;
+    return sanitizeNumberInput(getResultDisplay().value);
+}
+
+const clearResultsDisplay = function () {
+    clearContainerText(getResultDisplay());
 }
 
 const operate = function (term1, term2, operation) {
+    term1 = Number(term1);
+    term2 = Number(term2);
     if (term1 && term2 && operation) {
         switch (operation) {
             case "+":
                 return sum(term1, term2);
             case "-":
-                return sum(term1, term2 * -1);
+                return sum(term1, term2);
             case "x":
                 return multiply(term1, term2);
             case "/":
@@ -111,16 +117,15 @@ characterButtons.forEach((button) => {
 
 let resetButton = document.querySelector('.all-clear');
 resetButton.addEventListener('click', () => {
-    clearContainerText(getResultDisplay());
+    clearResultsDisplay();
     resetTerms();
 })
 
 let operators = document.querySelectorAll('.operator');
 operators.forEach((button) => {
     button.addEventListener('click', (event) => {
-        debugger;
         setPreviousContext(getCurrentContext());
-        clearContainerText(getResultDisplay());
+        clearResultsDisplay();
         setOperator(event.target.textContent);
         updateDisplay(getOperator());
     })
@@ -128,7 +133,10 @@ operators.forEach((button) => {
 
 let equals = document.querySelector('.equals');
 equals.addEventListener('click', (event) => {
-    operate(getPreviousContext(), getCurrentContext(), getOperator());
+    debugger;
+    let result = operate(getPreviousContext(), getCurrentContext(), getOperator());
+    clearResultsDisplay();
+    updateDisplay(result);
 });
 
 module.exports = {
