@@ -40,24 +40,16 @@ const divide = function (...args) {
     return quotient;
 }
 
-const setFirstTerm = function (value) {
+const setPreviousContext = function (value) {
     previousContext = value;
-}
-
-const setSecondTerm = function (value) {
-    currentContext = value;
 }
 
 const setOperator = function (value) {
     operator = value;
 }
 
-const getFirstTerm = function () {
+const getPreviousContext = function () {
     return previousContext;
-}
-
-const getSecondTerm = function () {
-    return currentContext;
 }
 
 const getOperator = function () {
@@ -78,7 +70,6 @@ const clearContainerText = function (element) {
 
 const resetTerms = function () {
     previousContext = null;
-    currentContext = null;
     operator = null;
 }
 
