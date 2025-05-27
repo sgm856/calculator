@@ -75,23 +75,28 @@ const updateDisplay = function (value) {
 }
 
 const clearContainerText = function (element) {
-    element.textContent = '';
+    element.value = '';
 }
 
 const resetTerms = function () {
     firstTerm = null;
     secondTerm = null;
+    operator = null;
 }
 
 let characterButtons = document.querySelectorAll('.character');
 characterButtons.forEach((button, index) => {
     button.addEventListener('click', (event) => {
-        debugger;
         updateDisplay(event.target.textContent);
-        alert(index);
     })
 }
 );
+
+let resetButton = document.querySelector('.all-clear');
+resetButton.addEventListener('click', () => {
+    clearContainerText(resultDisplay);
+    resetTerms();
+})
 
 const operate = function (term1, term2, operation) {
 
