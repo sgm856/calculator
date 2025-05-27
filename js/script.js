@@ -1,9 +1,9 @@
-const add = function () {
-
-}
-
-const subtract = function () {
-
+const sum = function (...args) {
+    let total = 0;
+    for (addend of args) {
+        total += addend;
+    }
+    return total;
 }
 
 const multiply = function () {
@@ -25,4 +25,6 @@ const powerTo = function () {
 const operate = function () {
 
 }
+
+
 
