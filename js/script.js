@@ -56,11 +56,15 @@ const getOperator = function () {
     return operator;
 }
 
+const getResultDisplay = function () {
+    return resultDisplay;
+}
+
 const updateDisplay = function (value) {
-    currentText = resultDisplay.value.toString();
+    currentText = getResultDisplay().value.toString();
     value = sanitizeNumberInput(value);
     if (!currentText.includes('.') || value != '.') {
-        resultDisplay.value = currentText + value;
+        getResultDisplay().value = currentText + value;
     }
 }
 
@@ -83,7 +87,7 @@ characterButtons.forEach((button, index) => {
 
 let resetButton = document.querySelector('.all-clear');
 resetButton.addEventListener('click', () => {
-    clearContainerText(resultDisplay);
+    clearContainerText(getResultDisplay());
     resetTerms();
 })
 
@@ -96,17 +100,17 @@ const operate = function (term1, term2, operation) {
         let result = 0;
         switch (operation) {
             case "+":
-                clearContainerText(resultDisplay);
-
+                setPreviousContext()
+                clearContainerText(getResultDisplay());
                 break;
             case "-":
-                clearContainerText(resultDisplay);
+                clearContainerText(getResultDisplay());
                 break;
             case "x":
-                clearContainerText(resultDisplay);
+                clearContainerText(getResultDisplay());
                 break;
             case "/":
-                clearContainerText(resultDisplay);
+                clearContainerText(getResultDisplay());
                 break;
         }
     }
