@@ -5,7 +5,7 @@ let displaying = false;
 let isInputDecimal = false;
 let resultDisplay = document.querySelector('.results-display');
 
-const sanitize = function (input) {
+const sanitizeNumberInput = function (input) {
     let cleanInput = input.toString().replace(/[^0-9.-]/g, '');
     return cleanInput;
 }
@@ -42,11 +42,35 @@ const divide = function (...args) {
     return quotient;
 }
 
-const updateDisplay = function (buttonValue) {
+const setFirstTerm = function (value) {
+    firstTerm = value;
+}
+
+const setSecondTerm = function (value) {
+    secondTerm = value;
+}
+
+const setOperator = function (value) {
+    operator = value;
+}
+
+const getFirstTerm = function () {
+    return firstTerm;
+}
+
+const getSecondTerm = function () {
+    return secondTerm;
+}
+
+const getOperator = function () {
+    return operator;
+}
+
+const updateDisplay = function (value) {
     currentText = resultDisplay.value.toString();
-    buttonValue = sanitize(buttonValue);
-    if (!currentText.includes('.') || buttonValue != '.') {
-        resultDisplay.value = currentText + buttonValue;
+    value = sanitizeNumberInput(value);
+    if (!currentText.includes('.') || value != '.') {
+        resultDisplay.value = currentText + value;
     }
 }
 
@@ -74,7 +98,7 @@ const operate = function (term1, term2, operation) {
 }
 
 module.exports = {
-    sanitize,
+    sanitize: sanitizeNumberInput,
     sum,
     multiply,
     divide
