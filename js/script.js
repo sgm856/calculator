@@ -1,3 +1,7 @@
+let operator = "";
+let firstTerm = "";
+let secondTerm = "";
+
 const sanitize = function (input) {
     let cleanInput = input.toString().replace(/[^0-9.-]/g, '');
     let number = Number.parseFloat(cleanInput);
@@ -36,7 +40,7 @@ const divide = function (...args) {
     return quotient;
 }
 
-const operate = function () {
+const operate = function (term1, term2, operation) {
 
 }
 
