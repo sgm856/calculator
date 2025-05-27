@@ -1,11 +1,13 @@
 let operator = "";
 let firstTerm = "";
 let secondTerm = "";
+let displaying = false;
+let isInputDecimal = false;
+let resultDisplay = document.querySelector('.results-display');
 
 const sanitize = function (input) {
     let cleanInput = input.toString().replace(/[^0-9.-]/g, '');
-    let number = Number.parseFloat(cleanInput);
-    return number;
+    return cleanInput;
 }
 
 const sum = function (...args) {
@@ -39,6 +41,33 @@ const divide = function (...args) {
     }
     return quotient;
 }
+
+const updateDisplay = function (buttonValue) {
+    currentText = resultDisplay.value.toString();
+    buttonValue = sanitize(buttonValue);
+    if (!currentText.includes('.') || buttonValue != '.') {
+        resultDisplay.value = currentText + buttonValue;
+    }
+}
+
+const clearContainerText = function (element) {
+    element.textContent = '';
+}
+
+const resetTerms = function () {
+    firstTerm = null;
+    secondTerm = null;
+}
+
+let characterButtons = document.querySelectorAll('.character');
+characterButtons.forEach((button, index) => {
+    button.addEventListener('click', (event) => {
+        debugger;
+        updateDisplay(event.target.textContent);
+        alert(index);
+    })
+}
+);
 
 const operate = function (term1, term2, operation) {
 
