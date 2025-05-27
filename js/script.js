@@ -8,6 +8,11 @@ const sanitizeNumberInput = function (input) {
     return cleanInput;
 }
 
+const sanitizeOperatorInput = function (input) {
+    let cleanInput = input.toString().replace(/[^+-x/]/g, '');
+    return cleanInput;
+}
+
 const sum = function (...args) {
     let total = 0;
     for (let addend of args) {
@@ -77,8 +82,35 @@ const resetTerms = function () {
     operator = null;
 }
 
+const getCurrentContext = function () {
+    return getResultDisplay().value;
+}
+
+const operate = function (term1, term2, operation) {
+    if (term1 && term2 && operation) {
+        switch (operation) {
+            case "+":
+                clearContainerText(getResultDisplay());
+                updateDisplay(sum(term1, term2));
+                break;
+            case "-":
+                clearContainerText(getResultDisplay());
+                updateDisplay(sum(term1, term2));
+                break;
+            case "x":
+                clearContainerText(getResultDisplay());
+                updateDisplay(multiply(term1, term2));
+                break;
+            case "/":
+                clearContainerText(getResultDisplay());
+                updateDisplay(divide(term1, term2));
+                break;
+        }
+    }
+}
+
 let characterButtons = document.querySelectorAll('.character');
-characterButtons.forEach((button, index) => {
+characterButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
         updateDisplay(event.target.textContent);
     })
@@ -91,30 +123,17 @@ resetButton.addEventListener('click', () => {
     resetTerms();
 })
 
-const getCurrentContext = function () {
-    return
-}
+let operators = document.querySelectorAll('operator');
+operators.forEach((button) => {
+    button.addEventListener((event) => {
+        setOperator(event.target.textContent);
+    })
+})
 
-const operate = function (term1, term2, operation) {
-    if (term1 && term2 && operation) {
-        let result = 0;
-        switch (operation) {
-            case "+":
-                setPreviousContext()
-                clearContainerText(getResultDisplay());
-                break;
-            case "-":
-                clearContainerText(getResultDisplay());
-                break;
-            case "x":
-                clearContainerText(getResultDisplay());
-                break;
-            case "/":
-                clearContainerText(getResultDisplay());
-                break;
-        }
-    }
-}
+let equals = document.querySelector('.equals');
+equals.addEventListener('click', (event) => {
+    operate(getPreviousContext(), getCurrentContext(), getOperator());
+})
 
 module.exports = {
     sanitize: sanitizeNumberInput,
