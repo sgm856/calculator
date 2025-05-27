@@ -1,12 +1,12 @@
 const sanitize = function (input) {
-    let cleanInput = input.toString.replace(/[^0-9.-]/g, '');
+    let cleanInput = input.toString().replace(/[^0-9.-]/g, '');
     let number = Number.parseFloat(cleanInput);
     return number;
 }
 
 const sum = function (...args) {
     let total = 0;
-    for (addend of args) {
+    for (let addend of args) {
         total += addend;
     }
     return total;
@@ -17,7 +17,7 @@ const multiply = function (...args) {
         return 0;
     }
     let product = 1;
-    for (factor of args) {
+    for (let factor of args) {
         product *= factor;
     }
     return product;
@@ -39,6 +39,13 @@ const divide = function (...args) {
 const operate = function () {
 
 }
+
+module.exports = {
+    sanitize,
+    sum,
+    multiply,
+    divide
+};
 
 
 
