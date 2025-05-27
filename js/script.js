@@ -1,8 +1,6 @@
 let operator = "";
-let firstTerm = "";
-let secondTerm = "";
-let displaying = false;
-let isInputDecimal = false;
+let previousContext = "";
+let currentContext = "";
 let resultDisplay = document.querySelector('.results-display');
 
 const sanitizeNumberInput = function (input) {
@@ -43,11 +41,11 @@ const divide = function (...args) {
 }
 
 const setFirstTerm = function (value) {
-    firstTerm = value;
+    previousContext = value;
 }
 
 const setSecondTerm = function (value) {
-    secondTerm = value;
+    currentContext = value;
 }
 
 const setOperator = function (value) {
@@ -55,11 +53,11 @@ const setOperator = function (value) {
 }
 
 const getFirstTerm = function () {
-    return firstTerm;
+    return previousContext;
 }
 
 const getSecondTerm = function () {
-    return secondTerm;
+    return currentContext;
 }
 
 const getOperator = function () {
@@ -79,8 +77,8 @@ const clearContainerText = function (element) {
 }
 
 const resetTerms = function () {
-    firstTerm = null;
-    secondTerm = null;
+    previousContext = null;
+    currentContext = null;
     operator = null;
 }
 
@@ -98,8 +96,29 @@ resetButton.addEventListener('click', () => {
     resetTerms();
 })
 
-const operate = function (term1, term2, operation) {
+const getCurrentContext = function () {
+    return
+}
 
+const operate = function (term1, term2, operation) {
+    if (term1 && term2 && operation) {
+        let result = 0;
+        switch (operation) {
+            case "+":
+                clearContainerText(resultDisplay);
+
+                break;
+            case "-":
+                clearContainerText(resultDisplay);
+                break;
+            case "x":
+                clearContainerText(resultDisplay);
+                break;
+            case "/":
+                clearContainerText(resultDisplay);
+                break;
+        }
+    }
 }
 
 module.exports = {
