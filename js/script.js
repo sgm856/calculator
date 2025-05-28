@@ -4,12 +4,20 @@ let currentContext = "";
 let resultDisplay = document.querySelector('.results-display');
 
 const sanitizeNumberInput = function (input) {
-    let cleanInput = input.toString().replace(/[^0-9.-]/g, '');
+    let cleanInput = input.toString().replace(/[^0-9.\-%]/g, '');
     return cleanInput;
 }
 
+const includesNumbers = function (input) {
+    return /[0-9.]/.test(input.toString());
+}
+
+const containsMessage = function (input) {
+    return /[a-zA-Z]/.test(input.toString())
+}
+
 const sanitizeOperatorInput = function (input) {
-    let cleanInput = input.toString().replace(/[^+-x/]/g, '');
+    let cleanInput = input.toString().replace(/[^+-×/]/g, '');
     return cleanInput;
 }
 
@@ -64,14 +72,23 @@ const getOperator = function () {
     return operator;
 }
 
-const getResultDisplay = function () {
+const getResultContainer = function () {
     return resultDisplay;
 }
 
 const updateDisplay = function (value) {
-    currentText = getResultDisplay().value.toString();
-    if (!currentText.includes('.') || value != '.') {
-        getResultDisplay().value = currentText + value;
+    currentText = getResultContainer().value.toString();
+    debugger;
+    if (containsMessage(currentText)) {
+        reset();
+        currentText = '';
+    }
+    const shouldAdd =
+        (value !== '.' && value !== '%') ||
+        (value === '.' && !currentText.includes('.')) ||
+        (value === '%' && !currentText.includes('%') && includesNumbers(currentText));
+    if (shouldAdd) {
+        getResultContainer().value = currentText + value;
     }
 }
 
@@ -84,33 +101,62 @@ const resetTerms = function () {
     operator = null;
 }
 
-const getCurrentContext = function () {
-    let currentNumber = sanitizeNumberInput(getResultDisplay().value);
+const getCurrentNumber = function () {
+    let currentNumber = sanitizeNumberInput(getResultContainer().value);
     if (currentNumber === '') {
         return NaN;
     }
-    return Number(sanitizeNumberInput(getResultDisplay().value));
+    if (currentNumber.includes('%')) {
+        return Number(sanitizeNumberInput(getResultContainer().value.replace(/[%]/g, ''))) / 100;
+    }
+    return Number(sanitizeNumberInput(getResultContainer().value));
 }
 
 const clearResultsDisplay = function () {
-    clearContainerText(getResultDisplay());
+    clearContainerText(getResultContainer());
 }
 
 const operate = function (term1, term2, operation) {
+    debugger;
+    if (arguments.length !== 3 || operation == null) return;
+
     term1 = Number(term1);
     term2 = Number(term2);
-    if (term1 && term2 && operation) {
-        switch (operation) {
-            case "+":
-                return sum(term1, term2);
-            case "-":
-                return sum(term1, term2);
-            case "x":
-                return multiply(term1, term2);
-            case "/":
-                return divide(term1, term2);
-        }
+
+    if (isNaN(term1) || isNaN(term2)) {
+        return;
     }
+
+    switch (operation) {
+        case "+":
+            return sum(term1, term2);
+        case "-":
+            return sum(term1, term2);
+        case "×":
+            return multiply(term1, term2);
+        case "/":
+            if (term2 === 0) {
+                reset();
+                return 'Nice try.';
+            } else {
+                return divide(term1, term2);
+            }
+    }
+}
+
+const flipSign = function () {
+    debugger;
+    const currNumber = getCurrentNumber();
+    if (typeof currNumber === 'number' && Number.isFinite(currNumber)) {
+        const flippedNumber = currNumber * -1;
+        clearResultsDisplay();
+        updateDisplay(flippedNumber.toString());
+    }
+}
+
+const reset = function () {
+    clearResultsDisplay();
+    resetTerms();
 }
 
 let characterButtons = document.querySelectorAll('.character');
@@ -124,15 +170,14 @@ characterButtons.forEach((button) => {
 
 let resetButton = document.querySelector('.all-clear');
 resetButton.addEventListener('click', () => {
-    clearResultsDisplay();
-    resetTerms();
+    reset();
 })
 
 let operators = document.querySelectorAll('.operator');
 operators.forEach((button) => {
     button.addEventListener('click', (event) => {
         debugger;
-        setPreviousContext(getCurrentContext());
+        setPreviousContext(getCurrentNumber());
         clearResultsDisplay();
         setOperator(event.target.textContent);
         updateDisplay(getOperator());
@@ -140,12 +185,25 @@ operators.forEach((button) => {
 });
 
 let equals = document.querySelector('.equals');
-equals.addEventListener('click', (event) => {
+equals.addEventListener('click', () => {
     debugger;
-    let result = operate(getPreviousContext(), getCurrentContext(), getOperator());
+    let result = operate(getPreviousContext(), getCurrentNumber(), getOperator());
     clearResultsDisplay();
     updateDisplay(result);
 });
+
+let percentage = document.querySelector('.percentage');
+percentage.addEventListener('click', (event) => {
+    let value = event.target.textContent;
+    value = sanitizeNumberInput(value);
+    updateDisplay(value);
+});
+
+let sign = document.querySelector('.sign');
+sign.addEventListener('click', (event) => {
+    flipSign();
+}
+)
 
 module.exports = {
     sanitize: sanitizeNumberInput,
