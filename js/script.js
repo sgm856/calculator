@@ -1,7 +1,7 @@
 let operator = "";
 let previousContext = "";
-let currentContext = "";
 let resultDisplay = document.querySelector('.results-display');
+let isResultDisplaying = false;
 
 const sanitizeNumberInput = function (input) {
     let cleanInput = input.toString().replace(/[^0-9.\-%]/g, '');
@@ -53,8 +53,7 @@ const divide = function (...args) {
     return quotient;
 }
 
-const setPreviousContext = function (value) {
-    debugger;
+const setPreviousNumber = function (value) {
     if (typeof value === 'number' && Number.isFinite(value)) {
         previousContext = value;
     }
@@ -64,7 +63,7 @@ const setOperator = function (value) {
     operator = value;
 }
 
-const getPreviousContext = function () {
+const getPreviousNumber = function () {
     return previousContext;
 }
 
@@ -77,8 +76,11 @@ const getResultContainer = function () {
 }
 
 const updateDisplay = function (value) {
+    if (isResultDisplaying && value != '%') {
+        clearResultsDisplay();
+        isResultDisplaying = false;
+    }
     currentText = getResultContainer().value.toString();
-    debugger;
     if (containsMessage(currentText)) {
         reset();
         currentText = '';
@@ -117,7 +119,6 @@ const clearResultsDisplay = function () {
 }
 
 const operate = function (term1, term2, operation) {
-    debugger;
     if (arguments.length !== 3 || operation == null) return;
 
     term1 = Number(term1);
@@ -129,17 +130,17 @@ const operate = function (term1, term2, operation) {
 
     switch (operation) {
         case "+":
-            return sum(term1, term2);
+            return roundDecimal(sum(term1, term2));
         case "-":
-            return sum(term1, term2);
+            return roundDecimal(sum(term1, term2));
         case "×":
-            return multiply(term1, term2);
+            return roundDecimal(multiply(term1, term2));
         case "/":
             if (term2 === 0) {
                 reset();
                 return 'Nice try.';
             } else {
-                return divide(term1, term2);
+                return roundDecimal(divide(term1, term2));
             }
     }
 }
@@ -159,6 +160,13 @@ const reset = function () {
     resetTerms();
 }
 
+const roundDecimal = function (value) {
+    if (value === Math.floor(value)) {
+        return value;
+    }
+    return parseFloat(value.toFixed(8));
+}
+
 let characterButtons = document.querySelectorAll('.character');
 characterButtons.forEach((button) => {
     button.addEventListener('click', (event) => {
@@ -176,20 +184,25 @@ resetButton.addEventListener('click', () => {
 let operators = document.querySelectorAll('.operator');
 operators.forEach((button) => {
     button.addEventListener('click', (event) => {
-        debugger;
-        setPreviousContext(getCurrentNumber());
-        clearResultsDisplay();
-        setOperator(event.target.textContent);
-        updateDisplay(getOperator());
+        if ((typeof getCurrentNumber() === 'number' && !isNaN(getCurrentNumber()))
+            || (typeof getPreviousNumber() === 'number' && !isNaN(getPreviousNumber()))) {
+            setPreviousNumber(getCurrentNumber());
+            clearResultsDisplay();
+            setOperator(event.target.textContent);
+            updateDisplay(getOperator());
+        }
     })
 });
 
 let equals = document.querySelector('.equals');
 equals.addEventListener('click', () => {
     debugger;
-    let result = operate(getPreviousContext(), getCurrentNumber(), getOperator());
-    clearResultsDisplay();
-    updateDisplay(result);
+    if (typeof getPreviousNumber() === 'number') {
+        let result = operate(getPreviousNumber(), getCurrentNumber(), getOperator());
+        clearResultsDisplay();
+        updateDisplay(result);
+        isResultDisplaying = true;
+    }
 });
 
 let percentage = document.querySelector('.percentage');
