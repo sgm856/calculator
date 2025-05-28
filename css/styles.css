@@ -66,3 +66,46 @@ button {
     justify-content: space-evenly;
     width: 40vw;
 }
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    .results-display {
+        max-width: 90vw;
+        font-size: 36px;
+    }
+
+    .row {
+        width: 90vw;
+    }
+
+    button {
+        width: 16vw;
+        height: 60px;
+        font-size: 20px;
+        min-height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 18px;
+    }
+
+    .results-display {
+        font-size: 28px;
+        max-width: 95vw;
+    }
+
+    .row {
+        width: 95vw;
+    }
+
+    button {
+        width: 17vw;
+        height: 55px;
+        font-size: 18px;
+    }
+}
